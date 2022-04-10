@@ -29,25 +29,17 @@ $output = '<table>
                     <th>ftype</th>
                 </tr>
 ';
-
 while($row = pg_fetch_assoc($resultquery)){
     $output .= "<tr>
                     <td>{$row["fname"]}</td>
                     <td>{$row["ftype"]}</td>
                 </tr>";
 }
-
-
 $output .= "</table>";
 
 echo $output;
 
 }else{
     echo "<h2>no record found</h2>";
-
 }
-
-
-
-
 ?>

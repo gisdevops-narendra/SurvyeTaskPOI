@@ -52,3 +52,50 @@
     margin-right: 18px;
     margin-bottom: -4px;
   }
+
+  .cleatbtn {
+    width: 49px;
+    height: 25px;
+    position: absolute;
+    right: 13px;
+    top: 11px;
+
+}
+
+#tble-data {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    bottom: 15px;
+    left: 10px;
+    background-color: white;
+    overflow: auto;
+    max-height: 250px;
+}
+
+th,
+td {
+    border: 0.5px solid black;
+}
+
+#legend {
+    z-index: 999;
+    display: none;
+    position: absolute;
+    bottom: 33px;
+    right: 11px;
+    width: 133px;
+}
+
+#legendbtn {
+    position: fixed;
+    top: 112px;
+    left: 20px;
+    z-index: 999;
+    cursor: pointer;
+}
+
+#legendbtn:hover {
+    color: blue;
+
+}

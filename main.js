@@ -7,30 +7,29 @@ var map = new ol.Map({
     target: 'map',
     view: view
 });
-
 var layerosm = new ol.layer.Tile({
     title:"osm",
     source: new ol.source.OSM()
 });
 
-var wmsCanalSource = new ol.source.ImageWMS({
+var wmsKlTasjSource = new ol.source.ImageWMS({
     url: 'http://localhost:8080/geoserver/VWRIS/wms',
     params: { 'LAYERS': 'VWRIS:kltask' },
     servertype: 'geoserver',
     crossOrigin: 'anonymous'
 });
-var wmscanalLayer = new ol.layer.Image({
+var wmsKlTaskLayer = new ol.layer.Image({
     visible: true,
     //extent: [71.46409117326702, 21.62483263358209, 74.73231625985055, 22.856996557147635],
     title: "kllayer",
-    source: wmsCanalSource
+    source: wmsKlTasjSource
 });
 var layerSwitcher = new ol.control.LayerSwitcher({
  
 });
 map.addControl(layerSwitcher);
 map.addLayer(layerosm);
-map.addLayer(wmscanalLayer);
+map.addLayer(wmsKlTaskLayer);
 
 // get button id so on click we draw the point
 var startDraw = document.getElementById('icon');
@@ -42,9 +41,6 @@ var vSource = new ol.source.Vector();
 var vLayer = new ol.layer.Vector({
     source: vSource
 });
-//add on map
-map.addLayer(vLayer);
-
 
 //here i have to firstly initalise the draw event
 var drawPoint = new ol.interaction.Draw({
@@ -63,6 +59,7 @@ drawPoint.on('drawend', function (cordinate) {
     $("#divaddpoint").show();
    // debugger;
     pointCordainate = cordinate.feature.getGeometry().getFlatCoordinates();
+    map.addLayer(vLayer);
     //console.log(cordinate.feature.getGeometry().getFlatCoordinates());
     //alert(cordinate.feature.getGeometry().getFlatCoordinates())
     //alert(pointCordainate);
@@ -113,9 +110,9 @@ function savedataintodb(){
     )
 };
 }
-
 function clearAddPoint(){
     map.removeInteraction(drawPoint);
+    map.removeLayer(vLayer);
     $("#divaddpoint").hide();
 }
 
