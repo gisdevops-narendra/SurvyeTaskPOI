@@ -14,7 +14,7 @@ var layerosm = new ol.layer.Tile({
 
 var wmsKlTasjSource = new ol.source.ImageWMS({
     url: 'http://localhost:8080/geoserver/VWRIS/wms',
-    params: { 'LAYERS': 'VWRIS:kltask' },
+    params: { 'LAYERS': 'VWRIS:database' },
     servertype: 'geoserver',
     crossOrigin: 'anonymous'
 });
@@ -41,6 +41,7 @@ var vSource = new ol.source.Vector();
 var vLayer = new ol.layer.Vector({
     source: vSource
 });
+map.addLayer(vLayer);
 
 //here i have to firstly initalise the draw event
 var drawPoint = new ol.interaction.Draw({
@@ -59,7 +60,7 @@ drawPoint.on('drawend', function (cordinate) {
     $("#divaddpoint").show();
    // debugger;
     pointCordainate = cordinate.feature.getGeometry().getFlatCoordinates();
-    map.addLayer(vLayer);
+   
     //console.log(cordinate.feature.getGeometry().getFlatCoordinates());
     //alert(cordinate.feature.getGeometry().getFlatCoordinates())
     //alert(pointCordainate);
@@ -117,7 +118,7 @@ function clearAddPoint(){
 }
 
 const updateLegend = function (resolution) {
-    const graphicUrl = wmsCanalSource.getLegendUrl(resolution);
+    const graphicUrl = wmsKlTasjSource.getLegendUrl(resolution);
     const img = document.getElementById('legend');
     img.src = graphicUrl;
   };

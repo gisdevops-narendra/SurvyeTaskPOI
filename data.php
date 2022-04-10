@@ -12,12 +12,12 @@ $uflong = $_REQUEST['longitude'];
 $uflat = $_REQUEST['latitude'];
 //echo($ufname,$uftype,$uflong,$uflat);
 
-$add_query = "INSERT INTO public.kltask(fname, ftype, geom) VALUES ('$ufname','$uftype', ST_MakePoint($uflong,$uflat))";
+$add_query = "INSERT INTO public.database(fname, ftype, geom) VALUES ('$ufname','$uftype', ST_MakePoint($uflong,$uflat))";
 $chkquery = pg_query($conn,$add_query) or die('insert query failed');
 
 
 
-$sql = "SELECT fname, ftype FROM public.kltask";
+$sql = "SELECT fname, ftype FROM public.database";
 $resultquery = pg_query($conn,$sql) or die('select query failed');
 
 
