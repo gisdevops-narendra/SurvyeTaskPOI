@@ -152,6 +152,7 @@ function savedataintodb(){
                 map.removeInteraction(drawPoint);
                 $("#featuresData").html(data);
                 $("#tble-data").css("display", "block");
+                $("#legend").css("display", "block");
                 $("#ename").val(''); 
                 $("#ddlpointtype").val(''); 
 
