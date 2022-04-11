@@ -66,7 +66,7 @@ var wmsKlTasjSource = new ol.source.ImageWMS({
 var wmsKlTaskLayer = new ol.layer.Image({
     visible: true,
     //extent: [71.46409117326702, 21.62483263358209, 74.73231625985055, 22.856996557147635],
-    title: "kllayer",
+    title: "Surveyed Layer",
     source: wmsKlTasjSource
 });
 var layerSwitcher = new ol.control.LayerSwitcher({
@@ -106,9 +106,16 @@ drawPoint.on('drawstart', function (e) {
     //alert("draw start");
 });
 
+
+$('.modal-dialog').draggable({
+    handle: ".modal-header"
+  });
+
 drawPoint.on('drawend', function (cordinate) {
-    $("#divaddpoint").show();
-   // debugger;
+    $("#myModal").modal('show');
+  
+    // $("#myModal").show();
+    debugger;
     pointCordainate = cordinate.feature.getGeometry().getFlatCoordinates();
    
     //console.log(cordinate.feature.getGeometry().getFlatCoordinates());
@@ -147,7 +154,8 @@ function savedataintodb(){
                 latitude: ulat
             },
             success: function (data) {
-                $("#divaddpoint").hide();
+                $("#myModal").modal('hide');
+                // $("#myModal").hide();
                 vSource.clear();
                 map.removeInteraction(drawPoint);
                 $("#featuresData").html(data);
@@ -164,8 +172,9 @@ function savedataintodb(){
 }
 function clearAddPoint(){
     map.removeInteraction(drawPoint);
-    map.removeLayer(vLayer);
-    $("#divaddpoint").hide();
+    vSource.clear();
+    $("#myModal").modal('hide');
+    // $("#divaddpoint").hide();
 }
 
 const updateLegend = function (resolution) {
