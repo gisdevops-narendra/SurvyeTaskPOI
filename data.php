@@ -29,6 +29,7 @@ $output = '<table>
                     <th>ftype</th>
                 </tr>
 ';
+
 while($row = pg_fetch_assoc($resultquery)){
     $output .= "<tr>
                     <td>{$row["fname"]}</td>

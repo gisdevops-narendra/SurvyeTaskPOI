@@ -3,6 +3,52 @@ var view = new ol.View({
     center: [70.97667574234188, 20.716470556284726],
     zoom: 15.047395063939724
 });
+
+//here i am defining new control with extending openlayers default control
+//custom control for create point
+var button = document.createElement('button');
+button.innerHTML = '<i class="fas fa-pencil-ruler"></i>';
+button.id='createpointid';
+var handleRotateNorth = function() {
+    startDrawing();
+};
+button.addEventListener('click', handleRotateNorth, false);
+var element = document.createElement('div');
+element.className = 'create-point-class ol-unselectable ol-control';
+element.appendChild(button);
+var createPointControl = new ol.control.Control({
+    element: element
+});
+//custom control for legend showing
+var buttonlegend = document.createElement('button');
+buttonlegend.innerHTML = '<i class="fa-solid fa-image-portrait"></i>';
+buttonlegend.id='legendid';
+var legendfun = function() {
+    slegend();
+};
+buttonlegend.addEventListener('click', legendfun, false);
+var element = document.createElement('div');
+element.className = 'legend-class ol-unselectable ol-control';
+element.appendChild(buttonlegend);
+var legendControl = new ol.control.Control({
+    element: element
+});
+//custom control for open  database Table
+var buttonDbTable = document.createElement('button');
+buttonDbTable.innerHTML = '<i class="fa-solid fa-table-list"></i>';
+buttonDbTable.id='tableid';
+var table = function() {
+    closeTble();
+};
+buttonDbTable.addEventListener('click', table, false);
+var element = document.createElement('div');
+element.className = 'table-class ol-unselectable ol-control';
+element.appendChild(buttonDbTable);
+var tableControl = new ol.control.Control({
+    element: element
+});
+//here i am ending new control with extending openlayers default control
+
 var map = new ol.Map({
     target: 'map',
     view: view
@@ -11,7 +57,6 @@ var layerosm = new ol.layer.Tile({
     title:"osm",
     source: new ol.source.OSM()
 });
-
 var wmsKlTasjSource = new ol.source.ImageWMS({
     url: 'http://localhost:8080/geoserver/VWRIS/wms',
     params: { 'LAYERS': 'VWRIS:database' },
@@ -30,6 +75,11 @@ var layerSwitcher = new ol.control.LayerSwitcher({
 map.addControl(layerSwitcher);
 map.addLayer(layerosm);
 map.addLayer(wmsKlTaskLayer);
+
+//Adding extended contrl over here
+map.addControl(createPointControl);
+map.addControl(legendControl);
+map.addControl(tableControl);
 
 // get button id so on click we draw the point
 var startDraw = document.getElementById('icon');
@@ -98,7 +148,7 @@ function savedataintodb(){
             },
             success: function (data) {
                 $("#divaddpoint").hide();
-                map.removeLayer(drawPoint);
+                vSource.clear();
                 map.removeInteraction(drawPoint);
                 $("#featuresData").html(data);
                 $("#tble-data").css("display", "block");

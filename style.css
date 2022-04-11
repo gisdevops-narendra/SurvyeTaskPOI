@@ -100,3 +100,18 @@ td {
     color: blue;
 
 }
+
+/* my default style for openlayers control that i have created */
+.create-point-class {
+    top: 58px;
+    left: .5em;
+  }
+/* custom control */
+.legend-class {
+    top: 84px;
+    left: .5em;
+  }
+.table-class{
+    top: 110px;
+    left: .5em;
+  }
