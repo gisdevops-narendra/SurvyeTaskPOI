@@ -1,4 +1,5 @@
 var content;
+var flagIsDrawingOn = false
 var view = new ol.View({
     projection: 'EPSG:4326',
     center: [70.97667574234188, 20.716470556284726],
@@ -33,7 +34,7 @@ element.appendChild(buttonlegend);
 var legendControl = new ol.control.Control({
     element: element
 });
-//custom control for open  database Table
+//custom control for database Table hide and show
 var buttonDbTable = document.createElement('button');
 buttonDbTable.innerHTML = '<i class="fa-solid fa-table-list"></i>';
 buttonDbTable.id = 'tableid';
@@ -61,6 +62,20 @@ element.appendChild(buttonInformation);
 var featureInfoarmtion = new ol.control.Control({
     element: element
 });
+//custom control for Creating Line Features
+var buttonLineCreate = document.createElement('button');
+buttonLineCreate.innerHTML = '<i class="fa-solid fa-road"></i>';
+buttonLineCreate.id = 'lineid';
+var drawLineFun = function () {
+    startDrawingLine();
+};
+buttonLineCreate.addEventListener('click', drawLineFun, false);
+var element = document.createElement('div');
+element.className = 'lineCreate-class ol-unselectable ol-control';
+element.appendChild(buttonLineCreate);
+var lineCreateControl = new ol.control.Control({
+    element: element
+});
 //here i am ending new control with extending openlayers default control
 var map = new ol.Map({
     target: 'map',
@@ -70,25 +85,53 @@ var layerosm = new ol.layer.Tile({
     title: "osm",
     source: new ol.source.OSM()
 });
-var wmsKlTasjSource = new ol.source.ImageWMS({
-    url: 'http://localhost:8080/geoserver/VWRIS/wms',
-    params: { 'LAYERS': 'VWRIS:database' },
-    servertype: 'geoserver',
-    crossOrigin: 'anonymous'
+var overlayers = new ol.layer.Group({
+    title: 'Database Layer',
+    layers: [
+        new ol.layer.Image({
+            visible: true,
+            title: "database",
+            source: new ol.source.ImageWMS({
+                url: 'http://localhost:8080/geoserver/VWRIS/wms',
+                params: { 'LAYERS': 'VWRIS:database' },
+                servertype: 'geoserver',
+                crossOrigin: 'anonymous'
+            })
+        }),
+        new ol.layer.Image({
+            visible: true,
+            title: "database",
+            source: new ol.source.ImageWMS({
+                url: 'http://localhost:8080/geoserver/VWRIS/wms',
+                params: { 'LAYERS': 'VWRIS:line' },
+                servertype: 'geoserver',
+                crossOrigin: 'anonymous'
+            })
+        })
+
+    ]
 });
-var wmsKlTaskLayer = new ol.layer.Image({
-    visible: true,
-    //extent: [71.46409117326702, 21.62483263358209, 74.73231625985055, 22.856996557147635],
-    title: "database",
-    source: wmsKlTasjSource
-});
+// var wmsKlTasjSource = new ol.source.ImageWMS({
+//     url: 'http://localhost:8080/geoserver/VWRIS/wms',
+//     params: { 'LAYERS': 'VWRIS:database' },
+//     servertype: 'geoserver',
+//     crossOrigin: 'anonymous'
+// });
+// var wmsKlTaskLayer = new ol.layer.Image({
+//     visible: true,
+//     //extent: [71.46409117326702, 21.62483263358209, 74.73231625985055, 22.856996557147635],
+//     title: "database",
+//     source: wmsKlTasjSource
+// });
 var layerSwitcher = new ol.control.LayerSwitcher({
 });
 map.addControl(layerSwitcher);
 map.addLayer(layerosm);
-map.addLayer(wmsKlTaskLayer);
+//map.addLayer(wmsKlTaskLayer);
+map.addLayer(overlayers);
 //Adding extended contrl over here
 map.addControl(createPointControl);
+map.addControl(lineCreateControl);
 map.addControl(legendControl);
 map.addControl(tableControl);
 map.addControl(featureInfoarmtion);
@@ -180,6 +223,110 @@ function clearAddPoint() {
     $("#myModal").modal('hide');
     // $("#divaddpoint").hide();
 }
+
+//Starting: Line Drawing Code--------------------------****************************************************************************----?
+// 1 . Define source
+var vectorSourceLine = new ol.source.Vector();
+// 2. Define layer
+var vectorLayerLine = new ol.layer.Vector({
+    source: vectorSourceLine
+});
+map.addLayer(vectorLayerLine);
+//here i have to firstly initalise the draw event
+var drawLine = new ol.interaction.Draw({
+    source: vectorSourceLine,//above source vector source
+    type: 'LineString' //linestring,polygon
+});
+//clear draw on again draw start
+drawLine.on('drawstart', function (e) {
+    // debugger;
+    // vectorSourceLine.clear();
+    //alert("draw start");
+});
+$('.modal-dialog').draggable({
+    handle: ".modal-header"
+});
+drawLine.on('drawend', function (cordinate) {
+    $("#myModalLine").modal('show');
+    // $("#myModal").show();
+    //debugger;
+    // lineCordinate = cordinate.feature.getGeometry().getCoordinates();
+    //console.log(lineCordinate);
+
+    //console.log(cordinate.feature.getGeometry().getFlatCoordinates());
+    //alert(cordinate.feature.getGeometry().getFlatCoordinates())
+    //alert(pointCordainate);
+    //alert("draw end");
+});
+function startDrawingLine() {
+    //  debugger;
+    map.addInteraction(drawLine);
+};
+
+function saveLineDataIntoDB() {
+    // get array of all features 
+    var featureArray = vectorSourceLine.getFeatures()
+    //  // Define geojson format 
+    var geogJONSformat = new ol.format.GeoJSON()
+    //  // Use method to convert feature to geojson
+    var featuresGeojson = geogJONSformat.writeFeaturesObject(featureArray)
+    //  // Array of all geojson
+    var geojsonFeatureArray = featuresGeojson.features
+    // debugger;
+    for (i = 0; i < geojsonFeatureArray.length; i++) {
+        //alert("submited btn clicked")
+        var featuresname = document.getElementById('enameLine').value;
+        //  alert(featuresname);
+        var featuretype = document.getElementById('ddlLinetype').value;
+        //  alert(featuretype);
+        ucord = JSON.stringify(geojsonFeatureArray[i].geometry)
+        // debugger;
+        // alert(ucord);
+        //var ulat = lineCordinate;
+
+        //console.log(featuresname,featuretype,ulat,ulong);
+
+        if (featuresname == '' || featuretype == '' || ucord == '') {
+            //  debugger;
+            alert("please enter all details");
+        } else {
+            $.ajax(
+                {
+                    url: 'dataLine.php',
+                    type: 'POST',
+                    //dataType:'json',
+                    data:
+                    {
+                        fname: featuresname,
+                        ftype: featuretype,
+                        fcordin: ucord,
+
+                    },
+                    success: function (data) {
+                        $("#myModalLine").modal('hide');
+                        // $("#myModal").hide();
+                        vectorSourceLine.clear();
+                        map.removeInteraction(drawLine);
+                        $("#tble-data-line").html(data);
+                        $("#tble-data-line").css("display", "block");
+                        $("#legend").css("display", "block");
+                        $("#enameLine").val('');
+                        $("#ddlLinetype").val('');
+                        //alert(result);
+                    }
+                }
+            )
+        };
+    }
+}
+function clearAddPoint() {
+    debugger;
+    map.removeInteraction(drawLine);
+    vectorSourceLine.clear();
+    $("#myModalLine").modal('hide');
+    // $("#divaddpoint").hide();
+}
+//Ending: Line Drawing code-----------------------*****************************************----------------------------->
 const updateLegend = function (resolution) {
     const graphicUrl = wmsKlTasjSource.getLegendUrl(resolution);
     const img = document.getElementById('legend');
@@ -209,7 +356,9 @@ function closeTble() {
         y.style.display = "block";
     }
 }
-function getinfo(evt) {
+function getinfo() {
+    flagIsDrawingOn = true;
+    document.getElementById('infoid').innerHTML = '<i class="far fa-stop-circle"></i>'
     map.on('singleclick', function (evt) {
         var viewResolution = (view.getResolution());
         if (popup) {
