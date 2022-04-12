@@ -1,67 +1,11 @@
+body{
+padding: 0;
+margin: 0;      
+}
 #map {
-    height: 705px;
+    height: 710px;
     width: 100%;
 }
-
-#icon {
-    position: fixed;
-    top: 72px;
-    left: 20px;
-    z-index: 999;
-    cursor: pointer;
-}
-
-#icon2 {
-    position: fixed;
-    top: 150px;
-    left: 20px;
-    z-index: 999;
-    cursor: pointer;
-}
-
-/* #divaddpoint {
-    display: none;
-    border: solid rgb(0, 153, 153);
-    z-index: 999;
-    position: absolute;
-    top: 121px;
-    right: 14px;
-    padding: 1%;
-    background-color: white;
-    width: 165px;
-    height: 100px;
-} */
-
-.clearbtn {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-    right: 6px;
-    top: 5px;
-}
-
-#mydivheader {
-    padding: 10px;
-    cursor: move;
-    z-index: 10;
-    background-color: #2196F3;
-    color: #fff;
-    top: 1px;
-    margin-top: -9px;
-    margin-left: -13px;
-    margin-right: 18px;
-    margin-bottom: -4px;
-}
-
-.cleatbtn {
-    width: 49px;
-    height: 25px;
-    position: absolute;
-    right: 13px;
-    top: 11px;
-
-}
-
 #tble-data {
     display: none;
     position: absolute;
@@ -72,12 +16,20 @@
     overflow: auto;
     max-height: 250px;
 }
-
+#tble-data-line {
+    display: none;
+    position: absolute;
+    z-index: 1;
+    bottom: 15px;
+    left: 10px;
+    background-color: white;
+    overflow: auto;
+    max-height: 250px;
+}
 th,
 td {
     border: 0.5px solid black;
 }
-
 #legend {
     z-index: 999;
     display: none;
@@ -86,40 +38,24 @@ td {
     right: 11px;
     width: 133px;
 }
-
-#legendbtn {
-    position: fixed;
-    top: 112px;
-    left: 20px;
-    z-index: 999;
-    cursor: pointer;
-}
-
-#legendbtn:hover {
-    color: blue;
-
-}
-
 /* my default style for openlayers control that i have created */
 .create-point-class {
     top: 58px;
     left: .5em;
-  }
-/* custom control */
+}
 .legend-class {
     top: 84px;
     left: .5em;
-  }
-.table-class{
+}
+.table-class {
     top: 110px;
     left: .5em;
-  }
-  .information-class{
+}
+.information-class {
     top: 137px;
     left: .5em;
-  }
-
-
-
-  /* popup */
-  
+}
+.lineCreate-class {
+    top: 163px;
+    left: .5em;
+}
